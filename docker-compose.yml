@@ -1,0 +1,50 @@
+# Versión utilizada
+# La versión 3 es la más utilizada y la que se recomienda
+version: '3'
+
+# Configuración de los servidores que vamos a necesitar
+services: 
+ 
+  # mysql es el nombre que vamos a dar a este primer servidor
+  # Será el nombre que tendremos que usar cuando nos refiramos a él
+  mysql:
+    build: mysql/
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_DATABASE: wordpress
+  apache:
+    build: apache/
+    ports:
+      - 80:80
+    volumes:
+      - proyecto:/var/www/html
+
+  php:
+    build: php/
+    ports:
+      - 9000:9000
+    volumes:
+      - proyecto:/var/www/html/
+
+  phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+          - mysql
+        environment:
+          PMA_HOST: mysql
+          PMA_PORT: 3306
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: user
+          MYSQL_PASSWORD: user
+        ports:
+          - 8000:80
+
+volumes: 
+  proyecto:
+
+
+  
